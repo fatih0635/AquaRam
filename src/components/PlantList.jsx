@@ -3,25 +3,27 @@ import axios from "axios";
 import AddPlantForm from "./AddPlantForm";
 import WateringChart from "./WateringChart";
 
+// 🔗 NGROK adresini buraya yaz
+const BASE_URL = "https://b208-31-61-230-184.ngrok-free.app";
+
 const PlantList = () => {
     const [plants, setPlants] = useState([]);
-    const [notified, setNotified] = useState(false); // tekrar tekrar bildirim yollamamak için
+    const [notified, setNotified] = useState(false);
 
     const fetchPlants = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/plants");
+            const response = await axios.get(`${BASE_URL}/plants`);
             const plantData = response.data;
             setPlants(plantData);
 
-            // Bildirim ve sesli uyarı (sadece bir kez çalışsın diye kontrol)
             if (!notified) {
                 plantData.forEach((plant) => {
                     if (plant.wateringInterval <= 2) {
                         if (Notification.permission === "granted") {
                             new Notification(`💧 Time to water ${plant.name}!`);
                             const audio = new Audio("/ding.mp3");
-                            audio.play().catch((err) => {
-                                console.log("Autoplay blocked, waiting for user interaction.");
+                            audio.play().catch(() => {
+                                console.log("Autoplay blocked");
                             });
                         }
                     }
@@ -34,14 +36,14 @@ const PlantList = () => {
     };
 
     const handlePlantAdded = () => {
-        setNotified(false); // yeni bitki eklenince tekrar kontrol edilsin
+        setNotified(false);
         fetchPlants();
     };
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/plants/${id}`);
-            setNotified(false); // silince de yeniden kontrol gerekebilir
+            await axios.delete(`${BASE_URL}/plants/${id}`);
+            setNotified(false);
             fetchPlants();
         } catch (error) {
             alert("Failed to delete the plant!");
@@ -49,7 +51,7 @@ const PlantList = () => {
     };
 
     useEffect(() => {
-        Notification.requestPermission(); // izin iste
+        Notification.requestPermission();
         fetchPlants();
     }, []);
 
@@ -84,3 +86,4 @@ const PlantList = () => {
 };
 
 export default PlantList;
+

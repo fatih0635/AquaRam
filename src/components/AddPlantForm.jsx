@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+// NGROK URL'İNİ BURAYA YAPIŞTIR
+const BASE_URL = "https://b208-31-61-230-184.ngrok-free.app";
+
 const AddPlantForm = ({ onPlantAdded }) => {
     const [name, setName] = useState("");
     const [wateringInterval, setWateringInterval] = useState("");
@@ -14,12 +17,13 @@ const AddPlantForm = ({ onPlantAdded }) => {
         };
 
         try {
-            await axios.post("http://localhost:8080/plants", newPlant);
+            await axios.post(`${BASE_URL}/plants`, newPlant);
             onPlantAdded();
             setName("");
             setWateringInterval("");
         } catch (error) {
             alert("Failed to add the plant!");
+            console.error(error);
         }
     };
 
@@ -46,3 +50,4 @@ const AddPlantForm = ({ onPlantAdded }) => {
 };
 
 export default AddPlantForm;
+
