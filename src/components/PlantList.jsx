@@ -13,8 +13,9 @@ const PlantList = () => {
     const fetchPlants = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/plants`);
+
+            // Gelen veriyi logla
             console.log("📦 Gelen veri:", response.data);
-            console.log("PLANT STATE:", plantData);
 
             // Veri güvenli şekilde alınır
             const rawData = response.data;
@@ -25,7 +26,9 @@ const PlantList = () => {
                     ? rawData.data
                     : [];
 
-            // Tip kontrolü (kırılmayı önler)
+            // Loglama burada yapılmalı (tanımlandıktan sonra)
+            console.log("🌿 PLANT STATE:", plantData);
+
             if (!Array.isArray(plantData)) {
                 console.error("❌ Veri dizisi bekleniyordu ama alınan:", plantData);
                 return;
