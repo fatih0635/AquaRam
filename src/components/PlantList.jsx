@@ -4,7 +4,7 @@ import AddPlantForm from "./AddPlantForm";
 import WateringChart from "./WateringChart";
 
 // 🌐 NGROK üzerinden yayınlanan backend adresin
-const BASE_URL = "https://82ed-31-61-230-184.ngrok-free.app";
+const BASE_URL = "https://c13c-31-61-230-184.ngrok-free.app";
 
 const PlantList = () => {
     const [plants, setPlants] = useState([]);
