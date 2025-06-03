@@ -14,6 +14,7 @@ const PlantList = () => {
         try {
             const response = await axios.get(`${BASE_URL}/plants`);
             console.log("📦 Gelen veri:", response.data);
+            console.log("PLANT STATE:", plantData);
 
             // Veri güvenli şekilde alınır
             const rawData = response.data;
