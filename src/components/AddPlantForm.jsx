@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 // NGROK URL'İNİ BURAYA YAPIŞTIR
-const BASE_URL = "https://b208-31-61-230-184.ngrok-free.app";
+const BASE_URL = "https://82ed-31-61-230-184.ngrok-free.app";
 
 const AddPlantForm = ({ onPlantAdded }) => {
     const [name, setName] = useState("");
