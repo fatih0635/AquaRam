@@ -3,7 +3,7 @@ import axios from "axios";
 import AddPlantForm from "./AddPlantForm";
 import WateringChart from "./WateringChart";
 
-// 🔗 NGROK adresini buraya yaz
+// 🌐 NGROK üzerinden yayınlanan backend adresin
 const BASE_URL = "https://b208-31-61-230-184.ngrok-free.app";
 
 const PlantList = () => {
@@ -13,7 +13,23 @@ const PlantList = () => {
     const fetchPlants = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/plants`);
-            const plantData = response.data;
+            console.log("📦 Gelen veri:", response.data);
+
+            // Veri güvenli şekilde alınır
+            const rawData = response.data;
+
+            const plantData = Array.isArray(rawData)
+                ? rawData
+                : Array.isArray(rawData.data)
+                    ? rawData.data
+                    : [];
+
+            // Tip kontrolü (kırılmayı önler)
+            if (!Array.isArray(plantData)) {
+                console.error("❌ Veri dizisi bekleniyordu ama alınan:", plantData);
+                return;
+            }
+
             setPlants(plantData);
 
             if (!notified) {
@@ -31,7 +47,7 @@ const PlantList = () => {
                 setNotified(true);
             }
         } catch (error) {
-            console.error("Failed to fetch plants:", error);
+            console.error("🚫 Failed to fetch plants:", error);
         }
     };
 
@@ -60,25 +76,26 @@ const PlantList = () => {
             <AddPlantForm onPlantAdded={handlePlantAdded} />
             <h3>Registered Plants</h3>
             <ul>
-                {plants.map((plant) => (
-                    <li key={plant.id}>
-                        🌱 {plant.name} – 💧 every {plant.wateringInterval} day(s)
-                        <button
-                            onClick={() => handleDelete(plant.id)}
-                            style={{
-                                marginLeft: "1rem",
-                                backgroundColor: "#e63946",
-                                color: "white",
-                                border: "none",
-                                padding: "4px 8px",
-                                borderRadius: "4px",
-                                cursor: "pointer",
-                            }}
-                        >
-                            Delete
-                        </button>
-                    </li>
-                ))}
+                {Array.isArray(plants) &&
+                    plants.map((plant) => (
+                        <li key={plant.id}>
+                            🌱 {plant.name} – 💧 every {plant.wateringInterval} day(s)
+                            <button
+                                onClick={() => handleDelete(plant.id)}
+                                style={{
+                                    marginLeft: "1rem",
+                                    backgroundColor: "#e63946",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "4px 8px",
+                                    borderRadius: "4px",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                Delete
+                            </button>
+                        </li>
+                    ))}
             </ul>
             <WateringChart plants={plants} />
         </div>
@@ -86,4 +103,3 @@ const PlantList = () => {
 };
 
 export default PlantList;
-
